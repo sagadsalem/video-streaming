@@ -19,6 +19,8 @@ func main() {
 
 	// the base streaming router
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/", Streaming).Methods("GET")
+	// the base streaming router
+	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/index.m3u8", Streaming).Methods("GET")
 	// the other streaming router
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/{segment:index[0-9]+.ts}", Streaming).Methods("GET")
 	// the subtitle file
@@ -51,8 +53,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("could not parsing the template %v\n", err)
 		return
 	}
-	// log success
-	log.Info("template parsed successfully")
 	return
 }
 

@@ -10,32 +10,44 @@
 <body>
 <h1>Video Streaming</h1>
 <div id="player"></div>
-<video id="video" controls
-       poster="https://cdn.europosters.eu/image/750/posters/marvel-universe-i31869.jpg">
-    <track label="Arabic" kind="subtitles" srclang="ar"
-           src='/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/subtitle.vtt'
-           default>
-</video>
+
+{{/*<video id="video" controls*/}}
+{{/*       poster="https://cdn.europosters.eu/image/750/posters/marvel-universe-i31869.jpg">*/}}
+{{/*    <track label="Arabic" kind="subtitles" srclang="ar"*/}}
+{{/*           src='/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/subtitle.vtt'*/}}
+{{/*           default>*/}}
+{{/*</video>*/}}
 {{/*<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>*/}}
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<script src="https://cdn.jsdelivr.net/clappr/latest/clappr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/clappr.dash-shaka-playback/latest/dash-shaka-playback.js"></script>
 <script>
-    let video = document.getElementById('video');
-    let path = '/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}';
-    // let player = new Clappr.Player({source: path, parentId: "#player"});
-    if (Hls.isSupported()) {
-        console.log("hls is supported " + path);
-        let hls = new Hls();
-        hls.loadSource(path);
-        hls.attachMedia(video);
-        // hls.on(Hls.Events.MANIFEST_PARSED, function () {
-        //   video.play();
-        // });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = path;
-        // video.addEventListener('loadedmetadata', function () {
-        //   video.play();
-        // });
-    }
+    let player = new Clappr.Player(
+        {
+            source: '/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/index.m3u8',
+            // plugins: {
+            //     'playback': [DashShakaPlayback],
+            // },
+            watermark: "https://hrins.net/wp-content/uploads/2017/03/hrins_logo-1.png",
+            position: 'top-right',
+            poster: 'http://cdn2.hrins.net/storage/disk11/posts/98zbNIAaI5fpAhaE/D0FhhWYKrKMoJ8Yi.jpg',
+            parentId: '#player',
+            mediacontrol: {seekbar: "#fe7e02", buttons: "#fe7e02"},
+            playback: {
+                // hlsjsConfig: {
+                //     hlsUseNextLevel: true,
+                // },
+                // crossOrigin: 'anonymous', // Required if track loaded from another domain
+                externalTracks: [
+                    {
+                        lang: 'ar',
+                        label: 'Arabic',
+                        src: "/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/subtitle.vtt",
+                        kind: "subtitles"
+                    },
+                ],
+            },
+        });
 </script>
 </body>
 </html>
