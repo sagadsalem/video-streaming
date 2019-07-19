@@ -21,6 +21,8 @@ func main() {
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/", Streaming).Methods("GET")
 	// the other streaming router
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/{segment:index[0-9]+.ts}", Streaming).Methods("GET")
+	// the subtitle file
+	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/subtitle.vtt", Subtitle).Methods("GET")
 
 	log.Info("server is now running on http://localhost:8000")
 	// if anything goes wrong with the server PANIC!
@@ -76,4 +78,17 @@ func Streaming(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", contentType)
 	http.ServeFile(w, r, file)
+}
+
+// Subtitle Handler to handle the subtitle serving
+func Subtitle(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/javascript")
+	vars := mux.Vars(r)
+
+	post := vars["post"]
+	video := vars["video"]
+	cdn := vars["cdn"]
+
+	path := fmt.Sprintf("storage/%s/posts/%s/%s/subtitle.vtt", cdn, post, video)
+	http.ServeFile(w, r, path)
 }

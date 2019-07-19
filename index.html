@@ -9,13 +9,19 @@
 </head>
 <body>
 <h1>Video Streaming</h1>
+<div id="player"></div>
 <video id="video" controls
        poster="https://cdn.europosters.eu/image/750/posters/marvel-universe-i31869.jpg">
+    <track label="Arabic" kind="subtitles" srclang="ar"
+           src='/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/subtitle.vtt'
+           default>
 </video>
+{{/*<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>*/}}
 <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script>
     let video = document.getElementById('video');
     let path = '/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}';
+    // let player = new Clappr.Player({source: path, parentId: "#player"});
     if (Hls.isSupported()) {
         console.log("hls is supported " + path);
         let hls = new Hls();
