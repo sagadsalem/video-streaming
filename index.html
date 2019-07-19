@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Video Streaming</title>
+</head>
+<body>
+<h1>Video Streaming</h1>
+<video id="video" controls
+       poster="https://cdn.europosters.eu/image/750/posters/marvel-universe-i31869.jpg">
+</video>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    let video = document.getElementById('video');
+    let path = '/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}';
+    if (Hls.isSupported()) {
+        console.log("hls is supported " + path);
+        let hls = new Hls();
+        hls.loadSource(path);
+        hls.attachMedia(video);
+        // hls.on(Hls.Events.MANIFEST_PARSED, function () {
+        //   video.play();
+        // });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = path;
+        // video.addEventListener('loadedmetadata', function () {
+        //   video.play();
+        // });
+    }
+</script>
+</body>
+</html>
