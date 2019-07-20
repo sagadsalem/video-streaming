@@ -26,6 +26,9 @@ func main() {
 	// the subtitle file
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/subtitle.vtt", Subtitle).Methods("GET")
 
+	// the image file
+	router.HandleFunc("/img/{image}", Image).Methods("GET")
+
 	log.Info("server is now running on http://localhost:8000")
 	// if anything goes wrong with the server PANIC!
 	panic(http.ListenAndServe(":8000", router))
@@ -90,5 +93,14 @@ func Subtitle(w http.ResponseWriter, r *http.Request) {
 	cdn := vars["cdn"]
 
 	path := fmt.Sprintf("storage/%s/posts/%s/%s/subtitle.vtt", cdn, post, video)
+	http.ServeFile(w, r, path)
+}
+
+// Image Handler to handle the image serving
+func Image(w http.ResponseWriter, r *http.Request) {
+	//w.Header().Set("Content-Type", "text/javascript")
+	vars := mux.Vars(r)
+
+	path := fmt.Sprintf("img/%s", vars["image"])
 	http.ServeFile(w, r, path)
 }
