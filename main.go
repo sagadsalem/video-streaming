@@ -19,17 +19,24 @@ func main() {
 
 	// the base streaming router
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/", Streaming).Methods("GET")
+
 	// the base streaming router
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/index.m3u8", Streaming).Methods("GET")
+
 	// the other streaming router
 	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/{segment:index[0-9]+.ts}", Streaming).Methods("GET")
+
 	// the subtitle file
-	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/subtitle.vtt", Subtitle).Methods("GET")
+	router.HandleFunc("/storage/{cdn:disk[0-9]+}/posts/{post}/{video}/subtitle.srt", Subtitle).Methods("GET")
 
 	// the image file
 	router.HandleFunc("/img/{image}", Image).Methods("GET")
 
+	// the js file
+	router.HandleFunc("/assets/js/{js}", Js).Methods("GET")
+
 	log.Info("server is now running on http://localhost:8000")
+
 	// if anything goes wrong with the server PANIC!
 	panic(http.ListenAndServe(":8000", router))
 
@@ -92,7 +99,7 @@ func Subtitle(w http.ResponseWriter, r *http.Request) {
 	video := vars["video"]
 	cdn := vars["cdn"]
 
-	path := fmt.Sprintf("storage/%s/posts/%s/%s/subtitle.vtt", cdn, post, video)
+	path := fmt.Sprintf("storage/%s/posts/%s/%s/subtitle.srt", cdn, post, video)
 	http.ServeFile(w, r, path)
 }
 
@@ -102,5 +109,14 @@ func Image(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
 	path := fmt.Sprintf("img/%s", vars["image"])
+	http.ServeFile(w, r, path)
+}
+
+// Js Handler to handle the js serving
+func Js(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/javascript")
+	vars := mux.Vars(r)
+
+	path := fmt.Sprintf("js/%s", vars["js"])
 	http.ServeFile(w, r, path)
 }

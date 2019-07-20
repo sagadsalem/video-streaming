@@ -11,43 +11,32 @@
 <h1>Video Streaming</h1>
 <div id="player"></div>
 
-{{/*<video id="video" controls*/}}
-{{/*       poster="https://cdn.europosters.eu/image/750/posters/marvel-universe-i31869.jpg">*/}}
-{{/*    <track label="Arabic" kind="subtitles" srclang="ar"*/}}
-{{/*           src='/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/subtitle.vtt'*/}}
-{{/*           default>*/}}
-{{/*</video>*/}}
-{{/*<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>*/}}
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+<script type="text/javascript" src="/assets/js/subtitles.js"></script>
 
-<script src="https://cdn.jsdelivr.net/clappr/latest/clappr.min.js"></script>
-<script src="https://cdn.jsdelivr.net/clappr.dash-shaka-playback/latest/dash-shaka-playback.js"></script>
 <script>
-    let player = new Clappr.Player(
-        {
-            source: '/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/index.m3u8',
-            // plugins: {
-            //     'playback': [DashShakaPlayback],
-            // },
-            watermark: "/img/logo.png",
-            position: 'top-right',
-            poster: 'http://cdn2.hrins.net/storage/disk11/posts/98zbNIAaI5fpAhaE/D0FhhWYKrKMoJ8Yi.jpg',
-            parentId: '#player',
-            mediacontrol: {seekbar: "#fe7e02", buttons: "#fe7e02"},
-            playback: {
-                // hlsjsConfig: {
-                //     hlsUseNextLevel: true,
-                // },
-                // crossOrigin: 'anonymous', // Required if track loaded from another domain
-                externalTracks: [
-                    {
-                        lang: 'ar',
-                        label: 'Arabic',
-                        src: "/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/subtitle.vtt",
-                        kind: "subtitles"
-                    },
-                ],
-            },
-        });
+    new Clappr.Player({
+        source: '/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/index.m3u8',
+        watermark: "/img/logo.png",
+        position: 'top-right',
+        poster: '/img/poster.jpg',
+        parentId: '#player',
+        mediacontrol: {
+            seekbar: "#fe7e02",
+            buttons: "#fe7e02"
+        },
+        plugins: [ClapprSubtitle],
+        subtitle: {
+            src: '/storage/{{.Cdn}}/posts/{{.Post}}/{{.Video}}/subtitle.srt',
+            auto: true, // automatically loads subtitle
+            // backgroundColor : 'transparent',
+            // fontWeight : 'normal',
+            fontSize: '18px',
+            // color: 'yellow',
+            textShadow: '1px 1px #000',
+        },
+    });
 </script>
 </body>
 </html>
